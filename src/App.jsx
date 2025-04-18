@@ -1,14 +1,15 @@
-import { useState, useEffect } from 'react';
+import {useEffect, useState} from 'react';
 import Description from './components/description/Description';
 import Options from './components/options/Options';
 import Feedback from './components/feedback/Feedback';
+import Notification from './components/notification/Notification';
 
 const FEEDBACK_STORAGE_KEY = 'feedbackData';
 
 const App = () => {
     const [feedback, setFeedback] = useState(() => {
         const stored = localStorage.getItem(FEEDBACK_STORAGE_KEY);
-        return stored ? JSON.parse(stored) : { good: 0, neutral: 0, bad: 0 };
+        return stored ? JSON.parse(stored) : {good: 0, neutral: 0, bad: 0};
     });
 
     const totalFeedback = feedback.good + feedback.neutral + feedback.bad;
@@ -22,7 +23,7 @@ const App = () => {
     };
 
     const resetFeedback = () => {
-        setFeedback({ good: 0, neutral: 0, bad: 0 });
+        setFeedback({good: 0, neutral: 0, bad: 0});
     };
 
     useEffect(() => {
@@ -41,14 +42,16 @@ const App = () => {
                 onLeaveFeedback={updateFeedback}
                 onReset={resetFeedback}
                 showReset={totalFeedback > 0}
-                totalFeedback={totalFeedback}
-                positiveFeedback={positiveFeedback}
             />
 
             {totalFeedback > 0 ? (
-                <Feedback feedback={feedback} />
+                <Feedback
+                    feedback={feedback}
+                    totalFeedback={totalFeedback}
+                    positiveFeedback={positiveFeedback}
+                />
             ) : (
-                <p>No feedback yet</p>
+                <Notification message="No feedback yet"/>
             )}
         </div>
     );

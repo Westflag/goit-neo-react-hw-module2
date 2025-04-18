@@ -1,17 +1,15 @@
 import PropTypes from 'prop-types';
 
-const Feedback = ({ feedback }) => {
-    const { good, neutral, bad } = feedback;
-    const total = good + neutral + bad;
-    const positive = total ? Math.round((good / total) * 100) : 0;
+const Feedback = ({feedback, totalFeedback, positiveFeedback}) => {
+    const {good, neutral, bad} = feedback;
 
     return (
         <div className="feedback">
             <p>Good: {good}</p>
             <p>Neutral: {neutral}</p>
             <p>Bad: {bad}</p>
-            <p>Total: {total}</p>
-            <p>Positive: {positive}%</p>
+            <p>Total: {totalFeedback}</p>
+            <p>Positive: {positiveFeedback}%</p>
         </div>
     );
 };
@@ -22,6 +20,9 @@ Feedback.propTypes = {
         neutral: PropTypes.number.isRequired,
         bad: PropTypes.number.isRequired,
     }).isRequired,
+    totalFeedback: PropTypes.number, // використовується для умов, якщо треба
+    positiveFeedback: PropTypes.number,
+
 };
 
 export default Feedback;

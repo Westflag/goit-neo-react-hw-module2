@@ -16,8 +16,6 @@ Options.propTypes = {
     onLeaveFeedback: PropTypes.func.isRequired,
     onReset: PropTypes.func.isRequired,
     showReset: PropTypes.bool.isRequired,
-    totalFeedback: PropTypes.number, // використовується для умов, якщо треба
-    positiveFeedback: PropTypes.number,
 };
 
 export default Options;
