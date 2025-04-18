@@ -1,23 +1,55 @@
-import React from "react";
-import userData from "./userData.json";
-import Profile from "./components/profile/Profile";
-import friends from "./friends.json";
-import transactions from "./transactions.json";
-import FriendList from "./components/friends/FriendList";
-import TransactionHistory from "./components/transactions/TransactionHistory";
+import { useState, useEffect } from 'react';
+import Description from './components/description/Description';
+import Options from './components/options/Options';
+import Feedback from './components/feedback/Feedback';
+
+const FEEDBACK_STORAGE_KEY = 'feedbackData';
 
 const App = () => {
+    const [feedback, setFeedback] = useState(() => {
+        const stored = localStorage.getItem(FEEDBACK_STORAGE_KEY);
+        return stored ? JSON.parse(stored) : { good: 0, neutral: 0, bad: 0 };
+    });
+
+    const totalFeedback = feedback.good + feedback.neutral + feedback.bad;
+    const positiveFeedback = totalFeedback ? Math.round((feedback.good / totalFeedback) * 100) : 0;
+
+    const updateFeedback = (feedbackType) => {
+        setFeedback(prev => ({
+            ...prev,
+            [feedbackType]: prev[feedbackType] + 1,
+        }));
+    };
+
+    const resetFeedback = () => {
+        setFeedback({ good: 0, neutral: 0, bad: 0 });
+    };
+
+    useEffect(() => {
+        localStorage.setItem(FEEDBACK_STORAGE_KEY, JSON.stringify(feedback));
+    }, [feedback]);
+
     return (
-        <div className="App">
-            <Profile
-                name={userData.username}
-                tag={userData.tag}
-                location={userData.location}
-                image={userData.avatar}
-                stats={userData.stats}
+        <div className="app">
+            <Description
+                title="Sip Happens Café"
+                message="Please leave your feedback about our service by selecting one of the options below."
             />
-            <FriendList friends={friends} />
-            <TransactionHistory items={transactions} />
+
+            <Options
+                options={['good', 'neutral', 'bad']}
+                onLeaveFeedback={updateFeedback}
+                onReset={resetFeedback}
+                showReset={totalFeedback > 0}
+                totalFeedback={totalFeedback}
+                positiveFeedback={positiveFeedback}
+            />
+
+            {totalFeedback > 0 ? (
+                <Feedback feedback={feedback} />
+            ) : (
+                <p>No feedback yet</p>
+            )}
         </div>
     );
 };
